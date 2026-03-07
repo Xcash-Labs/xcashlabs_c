@@ -9,7 +9,7 @@ TL;DR:
 ```bash
 rm -rf xcash-labs-core wownero zano release
 git submodule update --init --recursive --force
-sed -n '1,200p' apply_patches.sh
+for coin in xcash-labs-core wownero zano; do ./apply_patches.sh $coin; done
 ```
 
 Broken? Not working? Need help? https://moneroc.mrcyjanek.net/
