@@ -1,6 +1,6 @@
-[submodule "monero"]
-	path = monero
-	url = https://github.com/monero-project/monero
+[submodule "xcash-labs-core"]
+	path = xcash-labs-core
+	url = https://github.com/Xcash-Labs/xcash-labs-core
 	branch = release-v0.18
 	shallow = true
 [submodule "wownero"]
