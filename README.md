@@ -7,9 +7,9 @@
 TL;DR: 
 
 ```bash
-$ rm -rf monero wownero release
-$ git submodule update --init --recursive --force
-$ for coin in monero wownero zano; do ./apply_patches.sh $coin; done
+rm -rf xcash-labs-core wownero zano release
+git submodule update --init --recursive --force
+sed -n '1,200p' apply_patches.sh
 ```
 
 Broken? Not working? Need help? https://moneroc.mrcyjanek.net/
