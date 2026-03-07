@@ -1,15 +1,13 @@
 # wallet2_api.h (but this time C compatible)
 
-> Wrapper around wallet2_api.h that can be called using C api.
+> Wrapper around wallet2_api.h that can be called using a C API. The `monero` build option uses the `xcash-labs-core` submodule for this implemtation.
 
 ## Building
 
-TL;DR: 
+Quick start:
 
 ```bash
 rm -rf xcash-labs-core wownero zano release
 git submodule update --init --recursive --force
-for coin in xcash-labs-core wownero zano; do ./apply_patches.sh $coin; done
+for coin in xcash-labs-core wownero zano; do ./apply_patches.sh "$coin"; done
 ```
-
-Broken? Not working? Need help? https://moneroc.mrcyjanek.net/

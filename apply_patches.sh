@@ -1,65 +1,97 @@
 #!/bin/bash
 
-cd "$(realpath $(dirname $0))"
+cd "$(realpath "$(dirname "$0")")"
 
 repo="$1"
 
-if [[ "x$repo" == "x" ]];
-then
-    echo "Usage: $0 monero/wownero"
+if [[ -z "$repo" ]]; then
+    echo "Usage: $0 monero/xcash-labs-core/wownero/zano"
     exit 1
 fi
 
-if [[ "x$repo" != "xwownero" && "x$repo" != "xmonero" ]];
-then
-    echo "Usage: $0 monero/wownero"
-    echo "Invalid target given, only monero and wownero are supported targets"
-fi
-
-if [[ ! -d "$repo" ]]
-then
-    echo "no '$repo' directory found. clone with --recursive or run:"
-    echo "$ git submodule init && git submodule update --force";
+if [[ "$repo" != "monero" && "$repo" != "xcash-labs-core" && "$repo" != "wownero" && "$repo" != "zano" ]]; then
+    echo "Usage: $0 monero/xcash-labs-core/wownero/zano"
+    echo "Invalid target given"
     exit 1
 fi
 
-if [[ -f "$repo/.patch-applied" ]];
-then
-    echo "$repo/.patch-applied file exist. manual investigation recommended."
+# Map logical name -> actual source dir
+SOURCE_DIR="$repo"
+PATCH_DIR="$repo"
+
+if [[ "$repo" == "monero" ]]; then
+    SOURCE_DIR="xcash-labs-core"
+
+    # Prefer xcash-labs-core patches if present, otherwise fall back to monero patches
+    if [[ -d "patches/xcash-labs-core" ]]; then
+        PATCH_DIR="xcash-labs-core"
+    else
+        PATCH_DIR="monero"
+    fi
+fi
+
+if [[ ! -d "$SOURCE_DIR" ]]; then
+    echo "no '$SOURCE_DIR' directory found. clone with --recursive or run:"
+    echo "$ git submodule update --init --recursive --force"
+    exit 1
+fi
+
+if [[ ! -d "patches/$PATCH_DIR" ]]; then
+    echo "no 'patches/$PATCH_DIR' directory found."
+    exit 1
+fi
+
+if [[ -f "$SOURCE_DIR/.patch-applied" ]]; then
+    echo "$SOURCE_DIR/.patch-applied file exists. Manual investigation recommended."
     exit 0
 fi
 
 set -e
-cd $repo
-git am -3 --whitespace=fix --reject ../patches/$repo/*.patch
-if [[ "$repo" == "wownero" ]];
-then
+cd "$SOURCE_DIR"
+
+# Apply repo patches
+git am -3 --whitespace=fix --reject ../patches/"$PATCH_DIR"/*.patch
+
+# Repo-specific submodule URL fixes
+if [[ "$SOURCE_DIR" == "wownero" ]]; then
     pushd external/randomwow
         git remote set-url origin https://github.com/mrcyjanek/randomwow.git
     popd
 fi
-if [[ "$repo" == "zano" ]];
-then
+
+if [[ "$SOURCE_DIR" == "zano" ]]; then
     pushd contrib/tor-connect
-         git remote set-url origin https://github.com/mrcyjanek/tor-connect.git
+        git remote set-url origin https://github.com/mrcyjanek/tor-connect.git
     popd
 fi
+
 git submodule init
 git submodule update --init --recursive --force
 
-find . -name "*.S" -o -name "*.s" -type f | while read -r file; do
+# Only operate on files tracked by THIS repo, not nested submodule contents
+while IFS= read -r file; do
+    [[ -f "$file" ]] || continue
+
     if ! grep -q "\.note\.GNU-stack" "$file"; then
         echo "Adding conditional .note.GNU-stack section to: $file"
-        echo "" >> "$file"
-        echo "#ifdef __linux__" >> "$file"
-        echo ".section .note.GNU-stack,\"\",@progbits" >> "$file"
-        echo "#endif" >> "$file"
-        git add "$file" || true
+        {
+            echo ""
+            echo "#ifdef __linux__"
+            echo ".section .note.GNU-stack,\"\",@progbits"
+            echo "#endif"
+        } >> "$file"
+        git add "$file"
     fi
-done
-git commit -m "Add .note.GNU-stack section to assembly files"
+done < <(git ls-files '*.S' '*.s')
 
-git am -3 <<EOF
+# Commit only if something was actually staged
+if ! git diff --cached --quiet; then
+    git commit -m "Add .note.GNU-stack section to assembly files"
+else
+    echo "No assembly files needed .note.GNU-stack updates"
+fi
+
+git am -3 <<'EOF'
 From e56dd6cd0fb1a5e55d3cb08691edf24b26d65299 Mon Sep 17 00:00:00 2001
 From: Czarek Nakamoto <cyjan@mrcyjanek.net>
 Date: Fri, 20 Dec 2024 09:18:08 +0100
@@ -73,7 +105,7 @@ Subject: [PATCH] add .patch-applied
 diff --git a/.patch-applied b/.patch-applied
 new file mode 100644
 index 000000000..e69de29bb
--- 
+--
 2.39.5 (Apple Git-154)
 EOF
 
