@@ -75,11 +75,13 @@ cd "$(dirname "$0")"
 WDIR=$PWD
 
 pushd contrib/depends
-    if [[ -d "$HOST_ABI" ]];
+    if [[ -f "$HOST_ABI/share/toolchain.cmake" ]];
     then
-        echo "Not building depends, directory exists"
+        echo "Not building depends, toolchain already exists for $HOST_ABI"
     else
-        env -i PATH="$PATH" CC=gcc CXX=g++ make "$NPROC" HOST="$HOST_ABI" DEPENDS_UNTRUSTED_FAST_BUILDS="$DEPENDS_UNTRUSTED_FAST_BUILDS"
+        echo "Building depends for $HOST_ABI"
+        rm -rf "$HOST_ABI" "work/build/$HOST_ABI" "built/$HOST_ABI" || true
+        env -u MAKEFLAGS PATH="$PATH" CC=gcc CXX=g++ make -j1 HOST="$HOST_ABI" DEPENDS_UNTRUSTED_FAST_BUILDS="$DEPENDS_UNTRUSTED_FAST_BUILDS"
     fi
 popd
 
