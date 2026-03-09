@@ -70,9 +70,12 @@ endif()
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fvisibility=hidden")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fvisibility=hidden")
 
+if (${MONERO_FLAVOR} STREQUAL "monero")
+    set(MONERO_DIR ${CMAKE_SOURCE_DIR}/../xcash-labs-core)
+else()
+    set(MONERO_DIR ${CMAKE_SOURCE_DIR}/../${MONERO_FLAVOR})
+endif()
 
-
-set(MONERO_DIR ${CMAKE_SOURCE_DIR}/../${MONERO_FLAVOR})
 set(EXTERNAL_LIBS_DIR ${CMAKE_SOURCE_DIR}/../contrib/depends/${HOST_ABI})
 
 if (${HOST_ABI} STREQUAL "x86_64-apple-darwin11" OR ${HOST_ABI} STREQUAL "aarch64-apple-darwin11")
@@ -115,7 +118,7 @@ if (${MONERO_FLAVOR} STREQUAL "zano")
     )
 endif()
 
-add_subdirectory("${CMAKE_SOURCE_DIR}/../${MONERO_FLAVOR}" ${CMAKE_BINARY_DIR}/${MONERO_FLAVOR}_build EXCLUDE_FROM_ALL)
+add_subdirectory("${MONERO_DIR}" ${CMAKE_BINARY_DIR}/${MONERO_FLAVOR}_build EXCLUDE_FROM_ALL)
 if(${HOST_ABI} STREQUAL "x86_64-apple-darwin11" OR ${HOST_ABI} STREQUAL "aarch64-apple-darwin11" OR ${HOST_ABI} STREQUAL "x86_64-apple-darwin" OR ${HOST_ABI} STREQUAL "aarch64-apple-darwin" OR ${HOST_ABI} STREQUAL "host-apple-darwin" OR ${HOST_ABI} STREQUAL "x86_64-host-apple-darwin" OR ${HOST_ABI} STREQUAL "aarch64-host-apple-darwin" OR ${HOST_ABI} STREQUAL "host-apple-ios" OR ${HOST_ABI} STREQUAL "aarch64-apple-ios" OR ${HOST_ABI} STREQUAL "aarch64-apple-iossimulator" OR ${HOST_ABI} STREQUAL "x86_64-apple-iossimulator")
     if (${MONERO_FLAVOR} STREQUAL "monero")
         set(EXPORTED_SYMBOLS_FILE ${CMAKE_CURRENT_SOURCE_DIR}/monero_libwallet2_api_c.exp)
