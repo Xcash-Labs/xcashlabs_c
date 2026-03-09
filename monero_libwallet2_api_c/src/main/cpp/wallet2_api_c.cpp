@@ -4,7 +4,7 @@
 #include "helpers.hpp"
 #include <cstring>
 #include <thread>
-#include "../../../../monero/src/wallet/api/wallet2_api.h"
+#include "../../../../xcash-labs-core/src/wallet/api/wallet2_api.h"
 #include "monero_checksum.h"
 
 #ifdef __cplusplus
