@@ -17,7 +17,7 @@ index 7ecf5f6..62e8117 100644
  
 -    set(_cle_source ${CMAKE_SOURCE_DIR}/cmake/CheckLinkerFlag.c)
 +    get_filename_component(_cle_dir "${CMAKE_CURRENT_LIST_FILE}" PATH)
-+    set(_cle_source "${_cle_dir}/CheckLinkerFlag.c")
++    set(_cle_source "${_cle_dir}/cmake/CheckLinkerFlag.c")
  
      set(saved_CMAKE_C_FLAGS ${CMAKE_C_FLAGS})
      set(CMAKE_C_FLAGS "${flag}")
