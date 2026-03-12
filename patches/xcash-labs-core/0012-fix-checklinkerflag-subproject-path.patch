@@ -4,22 +4,30 @@ Date: Thu, 12 Mar 2026 16:35:46 -0400
 Subject: [PATCH] Fix CheckLinkerFlag source path for submodule builds
 
 ---
- cmake/CheckLinkerFlag.cmake | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ cmake/CheckLinkerFlag.cmake | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
 diff --git a/cmake/CheckLinkerFlag.cmake b/cmake/CheckLinkerFlag.cmake
 index 7ecf5f6..62e8117 100644
 --- a/cmake/CheckLinkerFlag.cmake
 +++ b/cmake/CheckLinkerFlag.cmake
-@@ -6,7 +6,7 @@ macro(CHECK_LINKER_FLAG flag VARIABLE)
+@@ -6,7 +6,8 @@ macro(CHECK_LINKER_FLAG flag VARIABLE)
        message(STATUS "Looking for ${flag} linker flag")
      endif()
-
+ 
 -    set(_cle_source ${CMAKE_SOURCE_DIR}/cmake/CheckLinkerFlag.c)
-+    set(_cle_source "${CHECK_LINKER_FLAG_CMAKE_DIR}/CheckLinkerFlag.c")
-
++    get_filename_component(_cle_dir "${CMAKE_CURRENT_LIST_FILE}" PATH)
++    set(_cle_source "${_cle_dir}/CheckLinkerFlag.c")
+ 
      set(saved_CMAKE_C_FLAGS ${CMAKE_C_FLAGS})
      set(CMAKE_C_FLAGS "${flag}")
---
+@@ -17,6 +18,7 @@ macro(CHECK_LINKER_FLAG flag VARIABLE)
+       CMAKE_FLAGS
+       "-DCMAKE_EXE_LINKER_FLAGS=${flag}"
+       OUTPUT_VARIABLE OUTPUT)
+     unset(_cle_source)
++    unset(_cle_dir)
+     set(CMAKE_C_FLAGS ${saved_CMAKE_C_FLAGS})
+     unset(saved_CMAKE_C_FLAGS)
+-- 
 2.34.1
-
