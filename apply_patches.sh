@@ -37,8 +37,8 @@ if [[ ! -d "$SOURCE_DIR" ]]; then
 fi
 
 if [[ ! -d "patches/$PATCH_DIR" ]]; then
-    echo "no 'patches/$PATCH_DIR' directory found."
-    exit 1
+    echo "No patches for '$PATCH_DIR'; skipping."
+    exit 0
 fi
 
 if [[ -f "$SOURCE_DIR/.patch-applied" ]]; then
