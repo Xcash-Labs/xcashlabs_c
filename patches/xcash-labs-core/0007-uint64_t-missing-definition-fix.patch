@@ -1,0 +1,24 @@
+From 92f0509bbb9fc57807f0524745abdb9b5efcd51c Mon Sep 17 00:00:00 2001
+From: minerjed <az0006t@protonmail.com>
+Date: Tue, 17 Mar 2026 23:13:27 -0400
+Subject: [PATCH] uint64_t missing definition fix
+
+---
+ contrib/epee/include/net/http_base.h | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/contrib/epee/include/net/http_base.h b/contrib/epee/include/net/http_base.h
+index b53766780..b0d19a46e 100644
+--- a/contrib/epee/include/net/http_base.h
++++ b/contrib/epee/include/net/http_base.h
+@@ -28,6 +28,7 @@
+ 
+ #pragma once
+ #include "memwipe.h"
++#include <stdint.h>
+ 
+ #include <boost/utility/string_ref.hpp>
+ 
+-- 
+2.34.1
+

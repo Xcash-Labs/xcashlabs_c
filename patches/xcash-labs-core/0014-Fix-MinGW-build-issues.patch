@@ -1,0 +1,33 @@
+From 65e88f895930caee4a6ed2171ba81061c2cba753 Mon Sep 17 00:00:00 2001
+From: minerjed <az0006t@protonmail.com>
+Date: Thu, 19 Mar 2026 14:00:56 -0400
+Subject: [PATCH] Fix MinGW build issues
+
+---
+ contrib/epee/src/abstract_http_client.cpp | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/contrib/epee/src/abstract_http_client.cpp b/contrib/epee/src/abstract_http_client.cpp
+index 31a98260f..8f4f7a7e4 100644
+--- a/contrib/epee/src/abstract_http_client.cpp
++++ b/contrib/epee/src/abstract_http_client.cpp
+@@ -2,6 +2,7 @@
+ #include "net/http_base.h"
+ #include "net/net_parse_helpers.h"
+ #include "misc_log_ex.h"
++#include <cmath>
+ 
+ #undef MONERO_DEFAULT_LOG_CATEGORY
+ #define MONERO_DEFAULT_LOG_CATEGORY "net.http"
+@@ -38,7 +39,7 @@ namespace net_utils
+     while (num_char >= radix)
+     {
+       temp = num_char % radix;
+-      num_char = (int)floor((float)num_char / (float)radix);
++      num_char = (int)std::floor((float)num_char / (float)radix);
+       csTmp = get_hex_vals()[temp];
+     }
+ 
+-- 
+2.34.1
+

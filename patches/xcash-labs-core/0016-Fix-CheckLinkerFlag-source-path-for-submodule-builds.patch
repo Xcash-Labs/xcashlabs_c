@@ -1,6 +1,6 @@
-From d39d5736c985cd65b57bd80acce3c2c827812b57 Mon Sep 17 00:00:00 2001
-From: root <root@office.localdomain>
-Date: Thu, 12 Mar 2026 16:35:46 -0400
+From 016213203855cadce4c3297ef628dcc18f7a3afb Mon Sep 17 00:00:00 2001
+From: minerjed <az0006t@protonmail.com>
+Date: Thu, 19 Mar 2026 18:10:32 -0400
 Subject: [PATCH] Fix CheckLinkerFlag source path for submodule builds
 
 ---
@@ -8,7 +8,7 @@ Subject: [PATCH] Fix CheckLinkerFlag source path for submodule builds
  1 file changed, 3 insertions(+), 1 deletion(-)
 
 diff --git a/cmake/CheckLinkerFlag.cmake b/cmake/CheckLinkerFlag.cmake
-index 7ecf5f6..62e8117 100644
+index 7ecf5f610..8276a2cde 100644
 --- a/cmake/CheckLinkerFlag.cmake
 +++ b/cmake/CheckLinkerFlag.cmake
 @@ -6,7 +6,8 @@ macro(CHECK_LINKER_FLAG flag VARIABLE)
@@ -21,13 +21,14 @@ index 7ecf5f6..62e8117 100644
  
      set(saved_CMAKE_C_FLAGS ${CMAKE_C_FLAGS})
      set(CMAKE_C_FLAGS "${flag}")
-@@ -17,6 +18,7 @@ macro(CHECK_LINKER_FLAG flag VARIABLE)
-       CMAKE_FLAGS
+@@ -18,6 +19,7 @@ macro(CHECK_LINKER_FLAG flag VARIABLE)
        "-DCMAKE_EXE_LINKER_FLAGS=${flag}"
        OUTPUT_VARIABLE OUTPUT)
      unset(_cle_source)
 +    unset(_cle_dir)
      set(CMAKE_C_FLAGS ${saved_CMAKE_C_FLAGS})
      unset(saved_CMAKE_C_FLAGS)
+ 
 -- 
 2.34.1
+
