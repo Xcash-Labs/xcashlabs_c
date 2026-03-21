@@ -68,11 +68,6 @@ fi
 git submodule init
 git submodule update --init --recursive --force
 
-if [[ "$repo" == "monero" ]]; then
-    git fetch --tags
-    git checkout "v0.18.3.4-beta2"
-fi
-
 # Only operate on files tracked by THIS repo, not nested submodule contents
 while IFS= read -r file; do
     [[ -f "$file" ]] || continue
