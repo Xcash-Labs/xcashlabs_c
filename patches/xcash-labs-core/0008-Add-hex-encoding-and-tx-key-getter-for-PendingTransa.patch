@@ -29,7 +29,8 @@ index 9088613c8..5f8ece05c 100644
 +{
 +    std::vector<std::string> keys;
 +    for (const auto& pt: m_pending_tx)
-+        keys.push_back(epee::string_tools::pod_to_hex(pt.tx_key));
++        crypto::secret_key tx_key = pt.tx_key;
++        keys.push_back(epee::string_tools::pod_to_hex(tx_key));
 +    return keys;
 +}
 +
