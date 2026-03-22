@@ -1716,12 +1716,15 @@ void* MONERO_Wallet_createTransactionMultDest(void* wallet_ptr, const char* dst_
     std::set<uint32_t> subaddr_indices = {};
     std::set<std::string> preferred_inputs = splitString(std::string(preferredInputs), std::string(preferredInputs_separator));
 
+//  uint32_t privacy_settings
+
     return wallet->createTransactionMultDest(
         dst_addr, std::string(payment_id),
         optAmount, mixin_count,
         PendingTransaction_Priority_fromInt(pendingTransactionPriority),
         subaddr_account,
         subaddr_indices,
+        1,
         preferred_inputs
     );
     DEBUG_END()
@@ -1743,7 +1746,7 @@ void* MONERO_Wallet_createTransaction(void* wallet_ptr, const char* dst_addr, co
     return wallet->createTransaction(std::string(dst_addr), std::string(payment_id),
                                         optAmount, mixin_count,
                                         PendingTransaction_Priority_fromInt(pendingTransactionPriority),
-                                        subaddr_account, subaddr_indices, preferred_inputs);
+                                        subaddr_account, subaddr_indices, 1, preferred_inputs);
     DEBUG_END()
 }
 
