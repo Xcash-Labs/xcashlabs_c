@@ -1,0 +1,212 @@
+From 12c12645594e782c3d6eb3dd428b4255bf041025 Mon Sep 17 00:00:00 2001
+From: root <root@office.localdomain>
+Date: Sun, 22 Mar 2026 14:26:39 -0400
+Subject: [PATCH] Add privacy settings and cleanup for new xcash/monero version
+
+---
+ src/wallet/api/pending_transaction.cpp |  2 +-
+ src/wallet/wallet2.cpp                 |  8 ++---
+ src/wallet/wallet2.h                   |  2 +-
+ src/wallet/wallet_cache_to_json.cpp    | 47 +++++++++++++-------------
+ 4 files changed, 29 insertions(+), 30 deletions(-)
+
+diff --git a/src/wallet/api/pending_transaction.cpp b/src/wallet/api/pending_transaction.cpp
+index 5f8ece0..911fca9 100644
+--- a/src/wallet/api/pending_transaction.cpp
++++ b/src/wallet/api/pending_transaction.cpp
+@@ -91,7 +91,7 @@ std::vector<std::string> PendingTransactionImpl::txKey() const
+ {
+     std::vector<std::string> keys;
+     for (const auto& pt: m_pending_tx)
+-        keys.push_back(epee::string_tools::pod_to_hex(pt.tx_key));
++        keys.push_back(epee::to_hex::string(epee::as_byte_span(pt.tx_key.data)));
+     return keys;
+ }
+ 
+diff --git a/src/wallet/wallet2.cpp b/src/wallet/wallet2.cpp
+index cb99bdc..de97adf 100644
+--- a/src/wallet/wallet2.cpp
++++ b/src/wallet/wallet2.cpp
+@@ -10413,7 +10413,7 @@ std::vector<size_t> wallet2::pick_preferred_rct_inputs(uint64_t needed_money, ui
+     if (!is_preferred_input(preferred_input_list, td.m_key_image)) {
+       continue;
+     }
+-    if (!is_spent(td, false) && !td.m_frozen && !td.m_key_image_partial && td.m_key_image_known && (use_rct ? true : !td.is_rct()) && is_transfer_unlocked(td) && td.m_subaddr_index.major == subaddr_account && subaddr_indices.count(td.m_subaddr_index.minor) == 1)
++    if (!is_spent(td, false) && !td.m_frozen && !td.m_key_image_partial && td.m_key_image_known && td.is_rct() && is_transfer_unlocked(td) && td.m_subaddr_index.major == subaddr_account && subaddr_indices.count(td.m_subaddr_index.minor) == 1)
+     {
+       if (td.amount() > m_ignore_outputs_above || td.amount() < m_ignore_outputs_below)
+       {
+@@ -10764,7 +10764,7 @@ std::vector<wallet2::pending_tx> wallet2::create_transactions_2(std::vector<cryp
+       MDEBUG("Ignoring output " << i << " of amount " << print_money(td.amount()) << " which is below fractional threshold " << print_money(fractional_threshold));
+       continue;
+     }
+-    if (!is_spent(td, false) && !td.m_frozen && !td.m_key_image_partial && (use_rct ? true : !td.is_rct()) && is_transfer_unlocked(td) && td.m_subaddr_index.major == subaddr_account && subaddr_indices.count(td.m_subaddr_index.minor) == 1)
++    if (!is_spent(td, false) && !td.m_frozen && !td.m_key_image_partial && td.is_rct() && is_transfer_unlocked(td) && td.m_subaddr_index.major == subaddr_account && subaddr_indices.count(td.m_subaddr_index.minor) == 1)
+     {
+       if (td.amount() > m_ignore_outputs_above || td.amount() < m_ignore_outputs_below)
+       {
+@@ -11367,7 +11367,7 @@ std::vector<wallet2::pending_tx> wallet2::create_transactions_all(uint64_t below
+       MDEBUG("Ignoring output " << i << " of amount " << print_money(td.amount()) << " which is below threshold " << print_money(fractional_threshold));
+       continue;
+     }
+-    if (!is_spent(td, false) && !td.m_frozen && !td.m_key_image_partial && (use_rct ? true : !td.is_rct()) && is_transfer_unlocked(td) && td.m_subaddr_index.major == subaddr_account && (subaddr_indices.empty() || subaddr_indices.count(td.m_subaddr_index.minor) == 1))
++    if (!is_spent(td, false) && !td.m_frozen && !td.m_key_image_partial && td.is_rct() && is_transfer_unlocked(td) && td.m_subaddr_index.major == subaddr_account && (subaddr_indices.empty() || subaddr_indices.count(td.m_subaddr_index.minor) == 1))
+     {
+       fund_found = true;
+       if (below == 0 || td.amount() < below)
+@@ -11415,7 +11415,7 @@ std::vector<wallet2::pending_tx> wallet2::create_transactions_single(const crypt
+   for (size_t i = 0; i < m_transfers.size(); ++i)
+   {
+     const transfer_details& td = m_transfers[i];
+-    if (td.m_key_image_known && td.m_key_image == ki && !is_spent(td, false) && !td.m_frozen && (use_rct ? true : !td.is_rct()) && is_transfer_unlocked(td))
++    if (td.m_key_image_known && td.m_key_image == ki && !is_spent(td, false) && !td.m_frozen && td.is_rct() && is_transfer_unlocked(td))
+     {
+       if (td.is_rct() || is_valid_decomposed_amount(td.amount()))
+         unused_transfers_indices.push_back(i);
+diff --git a/src/wallet/wallet2.h b/src/wallet/wallet2.h
+index 6586911..5df7ffe 100644
+--- a/src/wallet/wallet2.h
++++ b/src/wallet/wallet2.h
+@@ -1880,7 +1880,7 @@ private:
+     std::vector<uint64_t> get_unspent_amounts_vector(bool strict);
+     uint64_t get_dynamic_base_fee_estimate();
+     float get_output_relatedness(const transfer_details &td0, const transfer_details &td1) const;
+-    std::vector<size_t> pick_preferred_rct_inputs(uint64_t needed_money, uint32_t subaddr_account, const std::set<uint32_t> &subaddr_indices);
++    std::vector<size_t> pick_preferred_rct_inputs(uint64_t needed_money, uint32_t subaddr_account, const std::set<uint32_t> &subaddr_indices, const std::vector<crypto::key_image>& preferred_input_list);
+     void set_spent(size_t idx, uint64_t height);
+     void set_unspent(size_t idx);
+     bool is_spent(const transfer_details &td, bool strict = true) const;
+diff --git a/src/wallet/wallet_cache_to_json.cpp b/src/wallet/wallet_cache_to_json.cpp
+index 618eed5..5613f79 100644
+--- a/src/wallet/wallet_cache_to_json.cpp
++++ b/src/wallet/wallet_cache_to_json.cpp
+@@ -134,58 +134,58 @@ const char* wallet2::serialize_cache_to_json() const
+             return json_result.c_str();
+         }
+ 
+-        // FIELD(m_key_images) - serializable_unordered_map<crypto::key_image, size_t>
++        // FIELD(m_key_images) - std::unordered_map<crypto::key_image, size_t>
+         ar.tag("m_key_images");
+-        if (!::serialization::serialize(ar, const_cast<serializable_unordered_map<crypto::key_image, size_t>&>(m_key_images))) {
++        if (!::serialization::serialize(ar, const_cast<std::unordered_map<crypto::key_image, size_t>&>(m_key_images))) {
+             json_result = "{\"error\":\"Failed to serialize m_key_images\"}";
+             return json_result.c_str();
+         }
+ 
+-        // FIELD(m_unconfirmed_txs) - serializable_unordered_map<crypto::hash, unconfirmed_transfer_details>
++        // FIELD(m_unconfirmed_txs) - std::unordered_map<crypto::hash, unconfirmed_transfer_details>
+         ar.tag("m_unconfirmed_txs");
+-        if (!::serialization::serialize(ar, const_cast<serializable_unordered_map<crypto::hash, unconfirmed_transfer_details>&>(m_unconfirmed_txs))) {
++        if (!::serialization::serialize(ar, const_cast<std::unordered_map<crypto::hash, unconfirmed_transfer_details>&>(m_unconfirmed_txs))) {
+             json_result = "{\"error\":\"Failed to serialize m_unconfirmed_txs\"}";
+             return json_result.c_str();
+         }
+ 
+-        // FIELD(m_payments) - payment_container (serializable_unordered_multimap<crypto::hash, payment_details>)
++        // FIELD(m_payments) - payment_container (std::unordered_multimap<crypto::hash, payment_details>)
+         ar.tag("m_payments");
+         if (!::serialization::serialize(ar, const_cast<payment_container&>(m_payments))) {
+             json_result = "{\"error\":\"Failed to serialize m_payments\"}";
+             return json_result.c_str();
+         }
+ 
+-        // FIELD(m_tx_keys) - serializable_unordered_map<crypto::hash, crypto::secret_key>
++        // FIELD(m_tx_keys) - std::unordered_map<crypto::hash, crypto::secret_key>
+         ar.tag("m_tx_keys");
+-        if (!::serialization::serialize(ar, const_cast<serializable_unordered_map<crypto::hash, crypto::secret_key>&>(m_tx_keys))) {
++        if (!::serialization::serialize(ar, const_cast<std::unordered_map<crypto::hash, crypto::secret_key>&>(m_tx_keys))) {
+             json_result = "{\"error\":\"Failed to serialize m_tx_keys\"}";
+             return json_result.c_str();
+         }
+ 
+-        // FIELD(m_confirmed_txs) - serializable_unordered_map<crypto::hash, confirmed_transfer_details>
++        // FIELD(m_confirmed_txs) - std::unordered_map<crypto::hash, confirmed_transfer_details>
+         ar.tag("m_confirmed_txs");
+-        if (!::serialization::serialize(ar, const_cast<serializable_unordered_map<crypto::hash, confirmed_transfer_details>&>(m_confirmed_txs))) {
++        if (!::serialization::serialize(ar, const_cast<std::unordered_map<crypto::hash, confirmed_transfer_details>&>(m_confirmed_txs))) {
+             json_result = "{\"error\":\"Failed to serialize m_confirmed_txs\"}";
+             return json_result.c_str();
+         }
+ 
+-        // FIELD(m_tx_notes) - serializable_unordered_map<crypto::hash, std::string>
++        // FIELD(m_tx_notes) - std::unordered_map<crypto::hash, std::string>
+         ar.tag("m_tx_notes");
+-        if (!::serialization::serialize(ar, const_cast<serializable_unordered_map<crypto::hash, std::string>&>(m_tx_notes))) {
++        if (!::serialization::serialize(ar, const_cast<std::unordered_map<crypto::hash, std::string>&>(m_tx_notes))) {
+             json_result = "{\"error\":\"Failed to serialize m_tx_notes\"}";
+             return json_result.c_str();
+         }
+ 
+-        // FIELD(m_unconfirmed_payments) - serializable_unordered_multimap<crypto::hash, pool_payment_details>
++        // FIELD(m_unconfirmed_payments) - std::unordered_multimap<crypto::hash, pool_payment_details>
+         ar.tag("m_unconfirmed_payments");
+-        if (!::serialization::serialize(ar, const_cast<serializable_unordered_multimap<crypto::hash, pool_payment_details>&>(m_unconfirmed_payments))) {
++        if (!::serialization::serialize(ar, const_cast<std::unordered_multimap<crypto::hash, pool_payment_details>&>(m_unconfirmed_payments))) {
+             json_result = "{\"error\":\"Failed to serialize m_unconfirmed_payments\"}";
+             return json_result.c_str();
+         }
+ 
+-        // FIELD(m_pub_keys) - serializable_unordered_map<crypto::public_key, size_t>
++        // FIELD(m_pub_keys) - std::unordered_map<crypto::public_key, size_t>
+         ar.tag("m_pub_keys");
+-        if (!::serialization::serialize(ar, const_cast<serializable_unordered_map<crypto::public_key, size_t>&>(m_pub_keys))) {
++        if (!::serialization::serialize(ar, const_cast<std::unordered_map<crypto::public_key, size_t>&>(m_pub_keys))) {
+             json_result = "{\"error\":\"Failed to serialize m_pub_keys\"}";
+             return json_result.c_str();
+         }
+@@ -211,9 +211,9 @@ const char* wallet2::serialize_cache_to_json() const
+             return json_result.c_str();
+         }
+ 
+-        // FIELD(m_subaddresses) - serializable_unordered_map<crypto::public_key, cryptonote::subaddress_index>
++        // FIELD(m_subaddresses) - std::unordered_map<crypto::public_key, cryptonote::subaddress_index>
+         ar.tag("m_subaddresses");
+-        if (!::serialization::serialize(ar, const_cast<serializable_unordered_map<crypto::public_key, cryptonote::subaddress_index>&>(m_subaddresses))) {
++        if (!::serialization::serialize(ar, const_cast<std::unordered_map<crypto::public_key, cryptonote::subaddress_index>&>(m_subaddresses))) {
+             json_result = "{\"error\":\"Failed to serialize m_subaddresses\"}";
+             return json_result.c_str();
+         }
+@@ -233,14 +233,14 @@ const char* wallet2::serialize_cache_to_json() const
+         }
+         oss << "\n  ]";
+ 
+-        // FIELD(m_additional_tx_keys) - serializable_unordered_map<crypto::hash, std::vector<crypto::secret_key>>
++        // FIELD(m_additional_tx_keys) - std::unordered_map<crypto::hash, std::vector<crypto::secret_key>>
+         ar.tag("m_additional_tx_keys");
+-        if (!::serialization::serialize(ar, const_cast<serializable_unordered_map<crypto::hash, std::vector<crypto::secret_key>>&>(m_additional_tx_keys))) {
++        if (!::serialization::serialize(ar, const_cast<std::unordered_map<crypto::hash, std::vector<crypto::secret_key>>&>(m_additional_tx_keys))) {
+             json_result = "{\"error\":\"Failed to serialize m_additional_tx_keys\"}";
+             return json_result.c_str();
+         }
+ 
+-        // FIELD(m_attributes) - serializable_unordered_map<std::string, std::string> - manual JSON serialization
++        // FIELD(m_attributes) - std::unordered_map<std::string, std::string> - manual JSON serialization
+         oss << ", \n  \"m_attributes\": {";
+         bool first_attr = true;
+         for (const auto& attr : m_attributes) {
+@@ -294,9 +294,8 @@ const char* wallet2::serialize_cache_to_json() const
+             return json_result.c_str();
+         }
+ 
+-        // FIELD(m_tx_device) - serializable_unordered_map<crypto::hash, std::string>
+         ar.tag("m_tx_device");
+-        if (!::serialization::serialize(ar, const_cast<serializable_unordered_map<crypto::hash, std::string>&>(m_tx_device))) {
++        if (!::serialization::serialize(ar, const_cast<std::unordered_map<crypto::hash, std::string>&>(m_tx_device))) {
+             json_result = "{\"error\":\"Failed to serialize m_tx_device\"}";
+             return json_result.c_str();
+         }
+@@ -309,9 +308,9 @@ const char* wallet2::serialize_cache_to_json() const
+             return json_result.c_str();
+         }
+ 
+-        // FIELD(m_cold_key_images) - serializable_unordered_map<crypto::public_key, crypto::key_image>
++        // FIELD(m_cold_key_images) - std::unordered_map<crypto::public_key, crypto::key_image>
+         ar.tag("m_cold_key_images");
+-        if (!::serialization::serialize(ar, const_cast<serializable_unordered_map<crypto::public_key, crypto::key_image>&>(m_cold_key_images))) {
++        if (!::serialization::serialize(ar, const_cast<std::unordered_map<crypto::public_key, crypto::key_image>&>(m_cold_key_images))) {
+             json_result = "{\"error\":\"Failed to serialize m_cold_key_images\"}";
+             return json_result.c_str();
+         }
+-- 
+2.34.1
+
