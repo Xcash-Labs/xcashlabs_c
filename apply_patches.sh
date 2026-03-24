@@ -65,8 +65,7 @@ if [[ "$SOURCE_DIR" == "zano" ]]; then
     popd
 fi
 
-#git submodule init
-git submodule sync --recursive
+git submodule init
 git submodule update --init --recursive --force
 
 POST_PATCH_DIR="${PATCH_DIR}-post"
@@ -85,7 +84,6 @@ if [[ -d "../patches/$POST_PATCH_DIR" ]]; then
         exit 1
     fi
 fi
-
 
 # Record updated submodule pointer in parent repo
 if [[ "$SOURCE_DIR" == "xcash-labs-core" && -d external/polyseed ]]; then
