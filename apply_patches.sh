@@ -68,6 +68,23 @@ fi
 git submodule init
 git submodule update --init --recursive --force
 
+POST_PATCH_DIR="${PATCH_DIR}-post"
+if [[ -d "../patches/$POST_PATCH_DIR" ]]; then
+    if [[ -d external/polyseed ]]; then
+        for patch in ../patches/"$POST_PATCH_DIR"/*.patch; do
+            [[ -f "$patch" ]] || continue
+            echo "Applying post patch $(basename "$patch") in external/polyseed"
+            (
+                cd external/polyseed
+                git am -3 --whitespace=fix --reject "../../../patches/$POST_PATCH_DIR/$(basename "$patch")"
+            )
+        done
+    else
+        echo "Post patch directory exists, but external/polyseed was not found"
+        exit 1
+    fi
+fi
+
 # Only operate on files tracked by THIS repo, not nested submodule contents
 while IFS= read -r file; do
     [[ -f "$file" ]] || continue
