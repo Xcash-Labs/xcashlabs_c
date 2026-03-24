@@ -65,7 +65,8 @@ if [[ "$SOURCE_DIR" == "zano" ]]; then
     popd
 fi
 
-git submodule init
+#git submodule init
+git submodule sync --recursive
 git submodule update --init --recursive --force
 
 POST_PATCH_DIR="${PATCH_DIR}-post"
@@ -82,6 +83,16 @@ if [[ -d "../patches/$POST_PATCH_DIR" ]]; then
     else
         echo "Post patch directory exists, but external/polyseed was not found"
         exit 1
+    fi
+fi
+
+
+# Record updated submodule pointer in parent repo
+if [[ "$SOURCE_DIR" == "xcash-labs-core" && -d external/polyseed ]]; then
+    if [[ -n "$(git status --porcelain -- external/polyseed)" ]]; then
+        echo "Recording updated external/polyseed submodule pointer"
+        git add external/polyseed
+        git commit -m "Update polyseed submodule pointer"
     fi
 fi
 
