@@ -1704,7 +1704,8 @@ void* MONERO_Wallet_createTransactionMultDest(void* wallet_ptr, const char* dst_
                                                 bool amount_sweep_all, const char* amount_list, const char* amount_list_separator, uint32_t mixin_count,
                                                 int pendingTransactionPriority,
                                                 uint32_t subaddr_account,
-                                                const char* preferredInputs, const char* preferredInputs_separator) {
+                                                const char* preferredInputs, const char* preferredInputs_separator,
+                                                uint32_t privacy_settings) {
     DEBUG_START()
     Monero::Wallet *wallet = reinterpret_cast<Monero::Wallet*>(wallet_ptr);
     std::vector<std::string> dst_addr = splitStringVector(std::string(dst_addr_list), std::string(dst_addr_list_separator));
@@ -1716,15 +1717,13 @@ void* MONERO_Wallet_createTransactionMultDest(void* wallet_ptr, const char* dst_
     std::set<uint32_t> subaddr_indices = {};
     std::set<std::string> preferred_inputs = splitString(std::string(preferredInputs), std::string(preferredInputs_separator));
 
-//  uint32_t privacy_settings
-
     return wallet->createTransactionMultDest(
         dst_addr, std::string(payment_id),
         optAmount, mixin_count,
         PendingTransaction_Priority_fromInt(pendingTransactionPriority),
         subaddr_account,
         subaddr_indices,
-        1,
+        privacy_settings,
         preferred_inputs
     );
     DEBUG_END()
@@ -1734,7 +1733,8 @@ void* MONERO_Wallet_createTransaction(void* wallet_ptr, const char* dst_addr, co
                                                     uint64_t amount, uint32_t mixin_count,
                                                     int pendingTransactionPriority,
                                                     uint32_t subaddr_account,
-                                                    const char* preferredInputs, const char* separator) {
+                                                    const char* preferredInputs, const char* separator,
+                                                    uint32_t privacy_settings) {
     DEBUG_START()
     Monero::Wallet *wallet = reinterpret_cast<Monero::Wallet*>(wallet_ptr);
     Monero::optional<uint64_t> optAmount;
@@ -1746,7 +1746,7 @@ void* MONERO_Wallet_createTransaction(void* wallet_ptr, const char* dst_addr, co
     return wallet->createTransaction(std::string(dst_addr), std::string(payment_id),
                                         optAmount, mixin_count,
                                         PendingTransaction_Priority_fromInt(pendingTransactionPriority),
-                                        subaddr_account, subaddr_indices, 1, preferred_inputs);
+                                        subaddr_account, subaddr_indices, privacy_settings, preferred_inputs);
     DEBUG_END()
 }
 
