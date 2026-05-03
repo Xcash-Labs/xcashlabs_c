@@ -703,7 +703,8 @@ extern ADDAPI void* MONERO_Wallet_createTransactionMultDest(void* wallet_ptr, co
                                                 bool amount_sweep_all, const char* amount_list, const char* amount_list_separator, uint32_t mixin_count,
                                                 int pendingTransactionPriority,
                                                 uint32_t subaddr_account,
-                                                const char* preferredInputs, const char* preferredInputs_separator);
+                                                const char* preferredInputs, const char* preferredInputs_separator,
+                                                uint32_t privacy_settings);
 //     virtual PendingTransaction * createTransaction(const std::string &dst_addr, const std::string &payment_id,
 //                                                    optional<uint64_t> amount, uint32_t mixin_count,
 //                                                    PendingTransaction::Priority = PendingTransaction::Priority_Low,
@@ -714,7 +715,8 @@ extern ADDAPI void* MONERO_Wallet_createTransaction(void* wallet_ptr, const char
                                                     uint64_t amount, uint32_t mixin_count,
                                                     int pendingTransactionPriority,
                                                     uint32_t subaddr_account,
-                                                    const char* preferredInputs, const char* separator);
+                                                    const char* preferredInputs, const char* separator,
+                                                    uint32_t privacy_settings);
 //     virtual PendingTransaction * createSweepUnmixableTransaction() = 0;
 //     virtual UnsignedTransaction * loadUnsignedTx(const std::string &unsigned_filename) = 0;
 extern ADDAPI void* MONERO_Wallet_loadUnsignedTx(void* wallet_ptr, const char* unsigned_filename);
