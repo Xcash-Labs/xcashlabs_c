@@ -315,8 +315,8 @@ abstract class Wallet2Wallet {
   int importMultisigImages({ required List<String> info, });
   int hasMultisigPartialKeyImages();
   Wallet2PendingTransaction restoreMultisigTransaction({ required String signData, });
-  Wallet2PendingTransaction createTransactionMultDest({ required List<String> dstAddr, String paymentId = "", required bool isSweepAll, required List<int> amounts, required int mixinCount, required int pendingTransactionPriority, required int subaddr_account, List<String> preferredInputs = const [], });
-  Wallet2PendingTransaction createTransaction({required String dst_addr, required String payment_id, required int amount, required int mixin_count, required int pendingTransactionPriority, required int subaddr_account, List<String> preferredInputs = const [],});
+  Wallet2PendingTransaction createTransactionMultDest({ required List<String> dstAddr, String paymentId = "", required bool isSweepAll, required List<int> amounts, required int mixinCount, required int pendingTransactionPriority, required int subaddr_account, List<String> preferredInputs = const [], int privacySettings = 0,});
+  Wallet2PendingTransaction createTransaction({required String dst_addr, required String payment_id, required int amount, required int mixin_count, required int pendingTransactionPriority, required int subaddr_account, List<String> preferredInputs = const [], int privacySettings = 0,});
   Wallet2UnsignedTransaction loadUnsignedTx({required String unsigned_filename});
   Wallet2UnsignedTransaction loadUnsignedTxUR({required String input});
   bool submitTransaction(String filename);

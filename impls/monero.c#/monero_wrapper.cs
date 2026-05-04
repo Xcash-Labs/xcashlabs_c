@@ -75,7 +75,7 @@ public partial class monero_wrapper : Node
 	}
 
 	public static void createTransaction(string address, ulong amount) {
-		pendingTx = MONERO_Wallet_createTransaction(wPtr, address, "", amount, 0, 0, 0, "", "");
+		pendingTx = MONERO_Wallet_createTransaction(wPtr, address, "", amount, 0, 0, 0, "", "", 0);
 		MONERO_PendingTransaction_commit(pendingTx, "", false);
 	}
 	
@@ -159,7 +159,8 @@ public partial class monero_wrapper : Node
 													ulong amount, uint mixin_count,
 													int pendingTransactionPriority,
 													uint subaddr_account,
-													string preferredInputs, string separator);
+													string preferredInputs, string separator,
+													uint privacy_settings);
 
 	[DllImport("/usr/lib/monero_libwallet2_api_c.so")]
 	public static extern bool MONERO_PendingTransaction_commit(IntPtr pendingTx_ptr, string filename, bool overwrite);

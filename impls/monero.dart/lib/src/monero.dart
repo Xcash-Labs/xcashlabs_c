@@ -907,14 +907,14 @@ class MoneroWallet implements Wallet2Wallet {
   }
   
   @override
-  Wallet2PendingTransaction createTransaction({required String dst_addr, required String payment_id, required int amount, required int mixin_count, required int pendingTransactionPriority, required int subaddr_account, List<String> preferredInputs = const []}) {
-    final transaction = monero.Wallet_createTransaction(walletPtr, dst_addr: dst_addr, payment_id: payment_id, amount: amount, mixin_count: mixin_count, pendingTransactionPriority: pendingTransactionPriority, subaddr_account: subaddr_account, preferredInputs: preferredInputs);
+  Wallet2PendingTransaction createTransaction({required String dst_addr, required String payment_id, required int amount, required int mixin_count, required int pendingTransactionPriority, required int subaddr_account, List<String> preferredInputs = const [], int privacySettings = 0}) {
+    final transaction = monero.Wallet_createTransaction(walletPtr, dst_addr: dst_addr, payment_id: payment_id, amount: amount, mixin_count: mixin_count, pendingTransactionPriority: pendingTransactionPriority, subaddr_account: subaddr_account, preferredInputs: preferredInputs, privacySettings: privacySettings);
     return MoneroPendingTransaction(transaction);
   }
   
   @override
-  Wallet2PendingTransaction createTransactionMultDest({required List<String> dstAddr, String paymentId = "", required bool isSweepAll, required List<int> amounts, required int mixinCount, required int pendingTransactionPriority, required int subaddr_account, List<String> preferredInputs = const []}) {
-    final transaction = monero.Wallet_createTransactionMultDest(walletPtr, dstAddr: dstAddr, paymentId: paymentId, isSweepAll: isSweepAll, amounts: amounts, mixinCount: mixinCount, pendingTransactionPriority: pendingTransactionPriority, subaddr_account: subaddr_account, preferredInputs: preferredInputs);
+  Wallet2PendingTransaction createTransactionMultDest({required List<String> dstAddr, String paymentId = "", required bool isSweepAll, required List<int> amounts, required int mixinCount, required int pendingTransactionPriority, required int subaddr_account, List<String> preferredInputs = const [], int privacySettings = 0}) {
+    final transaction = monero.Wallet_createTransactionMultDest(walletPtr, dstAddr: dstAddr, paymentId: paymentId, isSweepAll: isSweepAll, amounts: amounts, mixinCount: mixinCount, pendingTransactionPriority: pendingTransactionPriority, subaddr_account: subaddr_account, preferredInputs: preferredInputs, privacySettings: privacySettings);
     return MoneroPendingTransaction(transaction);
   }
   

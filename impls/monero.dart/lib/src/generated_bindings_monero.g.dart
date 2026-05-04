@@ -3415,6 +3415,7 @@ class MoneroC {
     int subaddr_account,
     ffi.Pointer<ffi.Char> preferredInputs,
     ffi.Pointer<ffi.Char> preferredInputs_separator,
+    int privacy_settings,
   ) {
     return _MONERO_Wallet_createTransactionMultDest(
       wallet_ptr,
@@ -3429,6 +3430,7 @@ class MoneroC {
       subaddr_account,
       preferredInputs,
       preferredInputs_separator,
+      privacy_settings,
     );
   }
 
@@ -3446,7 +3448,8 @@ class MoneroC {
                   ffi.Int,
                   ffi.Uint32,
                   ffi.Pointer<ffi.Char>,
-                  ffi.Pointer<ffi.Char>)>>(
+                  ffi.Pointer<ffi.Char>,
+                  ffi.Uint32)>>(
       'MONERO_Wallet_createTransactionMultDest');
   late final _MONERO_Wallet_createTransactionMultDest =
       _MONERO_Wallet_createTransactionMultDestPtr.asFunction<
@@ -3462,7 +3465,8 @@ class MoneroC {
               int,
               int,
               ffi.Pointer<ffi.Char>,
-              ffi.Pointer<ffi.Char>)>();
+              ffi.Pointer<ffi.Char>,
+              int)>();
 
   ffi.Pointer<ffi.Void> MONERO_Wallet_createTransaction(
     ffi.Pointer<ffi.Void> wallet_ptr,
@@ -3474,6 +3478,7 @@ class MoneroC {
     int subaddr_account,
     ffi.Pointer<ffi.Char> preferredInputs,
     ffi.Pointer<ffi.Char> separator,
+    int privacy_settings,
   ) {
     return _MONERO_Wallet_createTransaction(
       wallet_ptr,
@@ -3485,6 +3490,7 @@ class MoneroC {
       subaddr_account,
       preferredInputs,
       separator,
+      privacy_settings,
     );
   }
 
@@ -3499,7 +3505,8 @@ class MoneroC {
               ffi.Int,
               ffi.Uint32,
               ffi.Pointer<ffi.Char>,
-              ffi.Pointer<ffi.Char>)>>('MONERO_Wallet_createTransaction');
+              ffi.Pointer<ffi.Char>,
+              ffi.Uint32)>>('MONERO_Wallet_createTransaction');
   late final _MONERO_Wallet_createTransaction =
       _MONERO_Wallet_createTransactionPtr.asFunction<
           ffi.Pointer<ffi.Void> Function(
@@ -3511,7 +3518,8 @@ class MoneroC {
               int,
               int,
               ffi.Pointer<ffi.Char>,
-              ffi.Pointer<ffi.Char>)>();
+              ffi.Pointer<ffi.Char>,
+              int)>();
 
   ffi.Pointer<ffi.Void> MONERO_Wallet_loadUnsignedTx(
     ffi.Pointer<ffi.Void> wallet_ptr,
