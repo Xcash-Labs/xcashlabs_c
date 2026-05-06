@@ -138,64 +138,6 @@ void Function(String call, dynamic error)? errorHandler = (call, error) {
 };
 
 @Deprecated("TODO")
-String Wallet_voteStatus(Wallet ptr) {
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
-  debugStart?.call('MONERO_Wallet_voteStatus');
-
-  try {
-    final rPtr = lib!.MONERO_Wallet_voteStatus(ptr).cast<Utf8>();
-    final str = rPtr.toDartString();
-    MONERO_free(rPtr.cast());
-    debugEnd?.call('MONERO_Wallet_voteStatus');
-    return str;
-  } catch (e) {
-    errorHandler?.call('MONERO_Wallet_voteStatus', e);
-    debugEnd?.call('MONERO_Wallet_voteStatus');
-    return "";
-  }
-}
-
-@Deprecated("TODO")
-String Wallet_vote(Wallet ptr, String value) {
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
-  debugStart?.call('MONERO_Wallet_vote');
-
-  final value_ = value.toNativeUtf8().cast<Char>();
-
-  try {
-    final rPtr = lib!.MONERO_Wallet_vote(ptr, value_).cast<Utf8>();
-    final str = rPtr.toDartString();
-    MONERO_free(rPtr.cast());
-    debugEnd?.call('MONERO_Wallet_vote');
-    return str;
-  } catch (e) {
-    errorHandler?.call('MONERO_Wallet_vote', e);
-    debugEnd?.call('MONERO_Wallet_vote');
-    return "";
-  } finally {
-    calloc.free(value_);
-  }
-}
-
-@Deprecated("TODO")
-String Wallet_revote(Wallet ptr) {
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
-  debugStart?.call('MONERO_Wallet_revote');
-
-  try {
-    final rPtr = lib!.MONERO_Wallet_revote(ptr).cast<Utf8>();
-    final str = rPtr.toDartString();
-    MONERO_free(rPtr.cast());
-    debugEnd?.call('MONERO_Wallet_revote');
-    return str;
-  } catch (e) {
-    errorHandler?.call('MONERO_Wallet_revote', e);
-    debugEnd?.call('MONERO_Wallet_revote');
-    return "";
-  }
-}
-
-@Deprecated("TODO")
 int PendingTransaction_status(PendingTransaction ptr) {
   debugStart?.call('MONERO_PendingTransaction_status');
   lib ??= MoneroC(DynamicLibrary.open(libPath));
@@ -1810,6 +1752,64 @@ bool DeviceProgress_indeterminate(DeviceProgress ptr) {
 // Wallet
 
 typedef wallet = Pointer<Void>;
+
+@Deprecated("TODO")
+String Wallet_voteStatus(wallet ptr) {
+  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  debugStart?.call('MONERO_Wallet_voteStatus');
+
+  try {
+    final rPtr = lib!.MONERO_Wallet_voteStatus(ptr).cast<Utf8>();
+    final str = rPtr.toDartString();
+    MONERO_free(rPtr.cast());
+    debugEnd?.call('MONERO_Wallet_voteStatus');
+    return str;
+  } catch (e) {
+    errorHandler?.call('MONERO_Wallet_voteStatus', e);
+    debugEnd?.call('MONERO_Wallet_voteStatus');
+    return "";
+  }
+}
+
+@Deprecated("TODO")
+String Wallet_vote(wallet ptr, String value) {
+  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  debugStart?.call('MONERO_Wallet_vote');
+
+  final value_ = value.toNativeUtf8().cast<Char>();
+
+  try {
+    final rPtr = lib!.MONERO_Wallet_vote(ptr, value_).cast<Utf8>();
+    final str = rPtr.toDartString();
+    MONERO_free(rPtr.cast());
+    debugEnd?.call('MONERO_Wallet_vote');
+    return str;
+  } catch (e) {
+    errorHandler?.call('MONERO_Wallet_vote', e);
+    debugEnd?.call('MONERO_Wallet_vote');
+    return "";
+  } finally {
+    calloc.free(value_);
+  }
+}
+
+@Deprecated("TODO")
+String Wallet_revote(wallet ptr) {
+  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  debugStart?.call('MONERO_Wallet_revote');
+
+  try {
+    final rPtr = lib!.MONERO_Wallet_revote(ptr).cast<Utf8>();
+    final str = rPtr.toDartString();
+    MONERO_free(rPtr.cast());
+    debugEnd?.call('MONERO_Wallet_revote');
+    return str;
+  } catch (e) {
+    errorHandler?.call('MONERO_Wallet_revote', e);
+    debugEnd?.call('MONERO_Wallet_revote');
+    return "";
+  }
+}
 
 @Deprecated("TODO")
 String Wallet_seed(wallet ptr, {required String seedOffset}) {

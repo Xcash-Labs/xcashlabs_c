@@ -34,6 +34,64 @@ class MoneroC {
       _MONERO_PendingTransaction_statusPtr.asFunction<
           int Function(ffi.Pointer<ffi.Void>)>();
 
+  ffi.Pointer<ffi.Char> MONERO_Wallet_voteStatus(
+    ffi.Pointer<ffi.Void> wallet_ptr,
+  ) {
+    return _MONERO_Wallet_voteStatus(
+      wallet_ptr,
+    );
+  }
+
+  late final _MONERO_Wallet_voteStatusPtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Pointer<ffi.Char> Function(
+              ffi.Pointer<ffi.Void>)>>('MONERO_Wallet_voteStatus');
+
+  late final _MONERO_Wallet_voteStatus =
+      _MONERO_Wallet_voteStatusPtr.asFunction<
+          ffi.Pointer<ffi.Char> Function(
+              ffi.Pointer<ffi.Void>)>();
+
+  ffi.Pointer<ffi.Char> MONERO_Wallet_vote(
+    ffi.Pointer<ffi.Void> wallet_ptr,
+    ffi.Pointer<ffi.Char> value,
+  ) {
+    return _MONERO_Wallet_vote(
+      wallet_ptr,
+      value,
+    );
+  }
+
+  late final _MONERO_Wallet_votePtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Pointer<ffi.Char> Function(
+              ffi.Pointer<ffi.Void>,
+              ffi.Pointer<ffi.Char>)>>('MONERO_Wallet_vote');
+
+  late final _MONERO_Wallet_vote =
+      _MONERO_Wallet_votePtr.asFunction<
+          ffi.Pointer<ffi.Char> Function(
+              ffi.Pointer<ffi.Void>,
+              ffi.Pointer<ffi.Char>)>();
+
+  ffi.Pointer<ffi.Char> MONERO_Wallet_revote(
+    ffi.Pointer<ffi.Void> wallet_ptr,
+  ) {
+    return _MONERO_Wallet_revote(
+      wallet_ptr,
+    );
+  }
+
+  late final _MONERO_Wallet_revotePtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Pointer<ffi.Char> Function(
+              ffi.Pointer<ffi.Void>)>>('MONERO_Wallet_revote');
+
+  late final _MONERO_Wallet_revote =
+      _MONERO_Wallet_revotePtr.asFunction<
+          ffi.Pointer<ffi.Char> Function(
+              ffi.Pointer<ffi.Void>)>();
+
   ffi.Pointer<ffi.Char> MONERO_PendingTransaction_errorString(
     ffi.Pointer<ffi.Void> pendingTx_ptr,
   ) {
