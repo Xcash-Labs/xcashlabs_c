@@ -73,6 +73,11 @@ const int Priority_Last = 4;
 //     };
 //     virtual ~PendingTransaction() = 0;
 //     virtual int status() const = 0;
+// DPOPS Functions
+extern ADDAPI const char* MONERO_Wallet_voteStatus(void* wallet_ptr);
+extern ADDAPI const char* MONERO_Wallet_vote(void* wallet_ptr, const char* value);
+extern ADDAPI const char* MONERO_Wallet_revote(void* wallet_ptr);
+//
 extern ADDAPI int MONERO_PendingTransaction_status(void* pendingTx_ptr);
 //     virtual std::string errorString() const = 0;
 extern ADDAPI const char* MONERO_PendingTransaction_errorString(void* pendingTx_ptr);

@@ -60,8 +60,57 @@ extern "C"
 //
 //
 
-// PendingTransaction
+// DPOPS Functions
+const char* MONERO_Wallet_voteStatus(void* wallet_ptr)
+{
+    Monero::Wallet *wallet = reinterpret_cast<Monero::Wallet*>(wallet_ptr);
 
+    if (wallet == nullptr) {
+        return nullptr;
+    }
+
+    std::string str = wallet->vote_status();
+
+    const std::string::size_type size = str.size();
+    char *buffer = new char[size + 1];
+    memcpy(buffer, str.c_str(), size + 1);
+
+    return buffer;
+}
+const char* MONERO_Wallet_vote(void* wallet_ptr, const char* value)
+{
+    Monero::Wallet *wallet = reinterpret_cast<Monero::Wallet*>(wallet_ptr);
+
+    if (wallet == nullptr || value == nullptr) {
+        return nullptr;
+    }
+
+    std::string str = wallet->vote(std::string(value));
+
+    const std::string::size_type size = str.size();
+    char *buffer = new char[size + 1];
+    memcpy(buffer, str.c_str(), size + 1);
+
+    return buffer;
+}
+const char* MONERO_Wallet_revote(void* wallet_ptr)
+{
+    Monero::Wallet *wallet = reinterpret_cast<Monero::Wallet*>(wallet_ptr);
+
+    if (wallet == nullptr) {
+        return nullptr;
+    }
+
+    std::string str = wallet->revote();
+
+    const std::string::size_type size = str.size();
+    char *buffer = new char[size + 1];
+    memcpy(buffer, str.c_str(), size + 1);
+
+    return buffer;
+}
+
+// PendingTransaction
 int MONERO_PendingTransaction_status(void* pendingTx_ptr) {
     DEBUG_START()
     Monero::PendingTransaction *pendingTx = reinterpret_cast<Monero::PendingTransaction*>(pendingTx_ptr);

@@ -60,6 +60,24 @@ public partial class monero_wrapper : Node
 		return result;
 	}
 
+	public static string voteStatus() {
+		IntPtr resultPtr = MONERO_Wallet_voteStatus(wPtr);
+		string result = Marshal.PtrToStringAnsi(resultPtr);
+		return result;
+	}
+
+	public static string vote(string value) {
+		IntPtr resultPtr = MONERO_Wallet_vote(wPtr, value);
+		string result = Marshal.PtrToStringAnsi(resultPtr);
+		return result;
+	}
+
+	public static string revote() {
+		IntPtr resultPtr = MONERO_Wallet_revote(wPtr);
+		string result = Marshal.PtrToStringAnsi(resultPtr);
+		return result;
+	}
+
 	public static int lastTxErrorCode() {
 		return MONERO_PendingTransaction_status(pendingTx);
 	}
@@ -135,6 +153,15 @@ public partial class monero_wrapper : Node
 	
 	[DllImport("/usr/lib/monero_libwallet2_api_c.so")]
 	public static extern int MONERO_Wallet_status(IntPtr wPtr);
+
+	[DllImport("/usr/lib/monero_libwallet2_api_c.so")]
+	public static extern IntPtr MONERO_Wallet_voteStatus(IntPtr wPtr);
+
+	[DllImport("/usr/lib/monero_libwallet2_api_c.so")]
+	public static extern IntPtr MONERO_Wallet_vote(IntPtr wPtr, string value);
+
+	[DllImport("/usr/lib/monero_libwallet2_api_c.so")]
+	public static extern IntPtr MONERO_Wallet_revote(IntPtr wPtr);
 
 	[DllImport("/usr/lib/monero_libwallet2_api_c.so")]
 	public static extern int MONERO_PendingTransaction_status(IntPtr wPtr);
