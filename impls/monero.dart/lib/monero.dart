@@ -1812,6 +1812,24 @@ String Wallet_revote(wallet ptr) {
 }
 
 @Deprecated("TODO")
+bool Wallet_sweepAllToPrimary(wallet ptr) {
+  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  debugStart?.call('MONERO_Wallet_sweepAllToPrimary');
+
+  try {
+    final result =
+        lib!.MONERO_Wallet_sweepAllToPrimary(ptr) != 0;
+
+    debugEnd?.call('MONERO_Wallet_sweepAllToPrimary');
+    return result;
+  } catch (e) {
+    errorHandler?.call('MONERO_Wallet_sweepAllToPrimary', e);
+    debugEnd?.call('MONERO_Wallet_sweepAllToPrimary');
+    return false;
+  }
+}
+
+@Deprecated("TODO")
 String Wallet_seed(wallet ptr, {required String seedOffset}) {
   debugStart?.call('MONERO_Wallet_seed');
   lib ??= MoneroC(DynamicLibrary.open(libPath));

@@ -92,6 +92,24 @@ class MoneroC {
           ffi.Pointer<ffi.Char> Function(
               ffi.Pointer<ffi.Void>)>();
 
+  int MONERO_Wallet_sweepAllToPrimary(
+    ffi.Pointer<ffi.Void> wallet_ptr,
+  ) {
+    return _MONERO_Wallet_sweepAllToPrimary(
+      wallet_ptr,
+    );
+  }
+
+  late final _MONERO_Wallet_sweepAllToPrimaryPtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Uint8 Function(
+              ffi.Pointer<ffi.Void>)>>('MONERO_Wallet_sweepAllToPrimary');
+
+  late final _MONERO_Wallet_sweepAllToPrimary =
+      _MONERO_Wallet_sweepAllToPrimaryPtr.asFunction<
+          int Function(
+              ffi.Pointer<ffi.Void>)>();
+
   ffi.Pointer<ffi.Char> MONERO_PendingTransaction_errorString(
     ffi.Pointer<ffi.Void> pendingTx_ptr,
   ) {

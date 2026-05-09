@@ -164,6 +164,9 @@ public partial class monero_wrapper : Node
 	public static extern IntPtr MONERO_Wallet_revote(IntPtr wPtr);
 
 	[DllImport("/usr/lib/monero_libwallet2_api_c.so")]
+	public static extern bool MONERO_Wallet_sweepAllToPrimary(IntPtr wPtr);
+
+	[DllImport("/usr/lib/monero_libwallet2_api_c.so")]
 	public static extern int MONERO_PendingTransaction_status(IntPtr wPtr);
 	
 	[DllImport("/usr/lib/monero_libwallet2_api_c.so")]

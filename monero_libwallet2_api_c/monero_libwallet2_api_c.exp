@@ -1,6 +1,7 @@
 _MONERO_Wallet_voteStatus
 _MONERO_Wallet_vote
 _MONERO_Wallet_revote
+_MONERO_Wallet_sweepAllToPrimary
 _MONERO_PendingTransaction_status
 _MONERO_PendingTransaction_errorString
 _MONERO_PendingTransaction_commit

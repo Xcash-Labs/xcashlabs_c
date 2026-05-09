@@ -110,6 +110,18 @@ const char* MONERO_Wallet_revote(void* wallet_ptr)
     return buffer;
 }
 
+bool MONERO_Wallet_sweepAllToPrimary(void* wallet_ptr)
+{
+    Monero::Wallet *wallet =
+        reinterpret_cast<Monero::Wallet*>(wallet_ptr);
+
+    if (wallet == nullptr) {
+        return false;
+    }
+
+    return wallet->sweepAllToPrimary();
+}
+
 // PendingTransaction
 int MONERO_PendingTransaction_status(void* pendingTx_ptr) {
     DEBUG_START()
