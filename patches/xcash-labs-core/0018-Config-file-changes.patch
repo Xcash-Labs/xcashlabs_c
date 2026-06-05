@@ -1,0 +1,53 @@
+From ef73654e20f83d95c5361d050f36e090e97911f6 Mon Sep 17 00:00:00 2001
+From: minerjed <az0006t@protonmail.com>
+Date: Thu, 4 Jun 2026 22:09:46 -0400
+Subject: [PATCH] Config file changes
+
+---
+ src/cryptonote_config.h | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/src/cryptonote_config.h b/src/cryptonote_config.h
+index ba445f194..4b5cbce7d 100644
+--- a/src/cryptonote_config.h
++++ b/src/cryptonote_config.h
+@@ -47,7 +47,7 @@
+ #define CURRENT_BLOCK_MINOR_VERSION 0
+ //#define CRYPTONOTE_BLOCK_FUTURE_TIME_LIMIT 60 * 60 * 2
+ #define CRYPTONOTE_BLOCK_FUTURE_TIME_LIMIT (DIFFICULTY_TARGET_V2 * 60) // ~1h @ 60s target
+-#define CRYPTONOTE_DEFAULT_TX_SPENDABLE_AGE 20
++#define CRYPTONOTE_DEFAULT_TX_SPENDABLE_AGE 10
+
+ #define BLOCKCHAIN_TIMESTAMP_CHECK_WINDOW 60
+ #define MONEY_SUPPLY ((uint64_t)(100000000000000))
+@@ -310,8 +310,8 @@ namespace config
+
+   namespace testnet
+   {
+-    uint64_t const CRYPTONOTE_PUBLIC_ADDRESS_BASE58_PREFIX = 53;
+-    uint64_t const CRYPTONOTE_PUBLIC_INTEGRATED_ADDRESS_BASE58_PREFIX = 54;
++    uint64_t const CRYPTONOTE_PUBLIC_ADDRESS_BASE58_PREFIX = 0x1d939c;            // TCk...
++    uint64_t const CRYPTONOTE_PUBLIC_INTEGRATED_ADDRESS_BASE58_PREFIX = 0x17919c; // TCb...
+     uint64_t const CRYPTONOTE_PUBLIC_SUBADDRESS_BASE58_PREFIX = 63;
+     uint16_t const P2P_DEFAULT_PORT = 28280;
+     uint16_t const RPC_DEFAULT_PORT = 28281;
+@@ -323,8 +323,8 @@ namespace config
+
+   namespace stagenet
+   {
+-    uint64_t const CRYPTONOTE_PUBLIC_ADDRESS_BASE58_PREFIX = 24;
+-    uint64_t const CRYPTONOTE_PUBLIC_INTEGRATED_ADDRESS_BASE58_PREFIX = 25;
++    uint64_t const CRYPTONOTE_PUBLIC_ADDRESS_BASE58_PREFIX = 0x6609a;             // StK...
++    uint64_t const CRYPTONOTE_PUBLIC_INTEGRATED_ADDRESS_BASE58_PREFIX = 0x1d5e9a; // StB...
+     uint64_t const CRYPTONOTE_PUBLIC_SUBADDRESS_BASE58_PREFIX = 36;
+     uint16_t const P2P_DEFAULT_PORT = 38280;
+     uint16_t const RPC_DEFAULT_PORT = 38281;
+@@ -403,4 +403,4 @@ namespace cryptonote
+       throw std::runtime_error("Invalid network type");
+     }
+   };
+-}
+\ No newline at end of file
++}
+--
+2.34.1
