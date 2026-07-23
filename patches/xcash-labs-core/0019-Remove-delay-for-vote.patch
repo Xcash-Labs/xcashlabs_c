@@ -1,0 +1,24 @@
+From 508d1bbeb69ae7e1a9025a177e9511119ae67f36 Mon Sep 17 00:00:00 2001
+From: minerjed <az0006t@protonmail.com>
+Date: Wed, 22 Jul 2026 21:51:21 -0400
+Subject: [PATCH] Remove delay for vote
+
+---
+ src/wallet/api/wallet.cpp | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/wallet/api/wallet.cpp b/src/wallet/api/wallet.cpp
+index 5ea9ae3a1..80ab72737 100644
+--- a/src/wallet/api/wallet.cpp
++++ b/src/wallet/api/wallet.cpp
+@@ -3083,7 +3083,7 @@ void WalletImpl::sync_minutes_and_seconds(const int MINUTES, const int SECONDS)
+
+ std::string WalletImpl::get_current_block_verifiers_list() {
+   // The macro expects this exact struct + variable name
+-  sync_minutes_and_seconds(0, 50);
++  // sync_minutes_and_seconds(0, 50);
+   struct network_data_nodes_list {
+     std::string network_data_nodes_public_address[NETWORK_DATA_NODES_AMOUNT];
+     std::string network_data_nodes_IP_address[NETWORK_DATA_NODES_AMOUNT];
+--
+2.34.1
